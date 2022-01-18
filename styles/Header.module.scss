@@ -14,11 +14,11 @@ $brake-point: 815px;
     justify-content: space-between;
     padding: 1rem;
     position: sticky;
+    top: 0;
     * {
         align-self: center;
     }
     h1,
-    a,
     ul {
         color: white;
     }
@@ -31,13 +31,13 @@ $brake-point: 815px;
             display: none;
         }
     }
+    hr {
+        width: 100px;
+    }
     a {
         @include mediaQuery($brake-point) {
             color: black;
         }
-    }
-    a:hover {
-        color: blue;
     }
     ul {
         font-size: 1.5rem;

@@ -1,15 +1,12 @@
 import { useState } from "react";
-export default function (value: {
-  defaultValue: string | boolean;
-  values: string | boolean[];
-}) {
+export default function (value: { defaultValue: string; values: string[] }) {
   const { defaultValue, values } = value;
   const [toggle, setToggle] = useState(defaultValue);
 
-  function toggleValue() {
-    setToggle((currentValue) =>
+  const toggleValue: any = () => {
+    setToggle((currentValue: string) =>
       values[0] != currentValue ? values[0] : values[1]
     );
-  }
+  };
   return [toggle, toggleValue];
 }

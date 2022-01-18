@@ -22,7 +22,8 @@
     "**/*.tsx",
     "components/header/Head,",
     "components/header/header-style.jsx",
-    "er.jsx"
+    "er.jsx",
+    "components/Header.jsx"
   ],
   "exclude": ["node_modules"]
 }
