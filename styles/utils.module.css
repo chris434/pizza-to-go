@@ -1,0 +1,10 @@
+#hamburgerMenu::after,
+#hamburgerMenu::before {
+    background-color: white;
+    content: "";
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    height: 4px;
+    width: 50px;
+}
