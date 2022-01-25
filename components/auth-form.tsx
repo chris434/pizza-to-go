@@ -1,6 +1,5 @@
-import styles from "../styles/Form.module.scss";
 import { useState, useRef } from "react";
-import Link from "next/link";
+
 function AuthForm({
   properties,
   header,
@@ -11,6 +10,7 @@ function AuthForm({
 }: any) {
   const [error, setError] = useState<any>(errors);
   const [inputs, setInputs] = useState<any>({});
+  const ref = useRef<any>([]);
 
   let errorTrue = true;
 
@@ -32,17 +32,26 @@ function AuthForm({
   const onSubmit = (e: any) => {
     e.preventDefault();
 
-    properties.map((property: any) => {
+    let scroll = false;
+    const scrollTo = (i: number) => {
+      if (!scroll) {
+        ref.current[i].scrollIntoView({ behavior: "smooth" });
+        scroll = true;
+      }
+    };
+
+    properties.map((property: any, i: number) => {
       const { text, optional } = property;
 
       if (property?.addOn && inputs?.[text]) {
         const message = property.addOn(inputs[text]);
+        message ? scrollTo(i) : null;
         return setErrorMessage(message, text);
       }
 
       if (!optional && (!inputs?.[text] || !inputs[text])) {
-        console.log(inputs);
-        return setErrorMessage(`${text} is required`, text);
+        scrollTo(i);
+        return setErrorMessage(`${text.replace(/_/g, " ")} is required`, text);
       }
       errorTrue = false;
       return setErrorMessage("", text);
@@ -54,24 +63,34 @@ function AuthForm({
   };
   const inputChange = (e: any) => {
     if (e?.target) {
-      console.log(e.target.value);
-      setInputs({ ...inputs, [e.target.id]: e.target.value });
+      const value =
+        e.target.type === "checkbox" && e.target?.checked
+          ? true
+          : e.target.type === "checkbox"
+          ? false
+          : e.target.value;
+
+      setInputs({
+        ...inputs,
+        [e.target.id]: value,
+      });
     }
   };
-  console.log(properties);
 
   return (
-    <div className="flex justify-center w-full mt-10 mb-10">
+    <div className="flex justify-center w-full  mt-10 mb-10">
       <form
         className="flex flex-col justify-center md:w-3/4 w-screen p-2 shadow-lg shadow-gray-600/50"
         onSubmit={onSubmit}>
         <h2 className="text-center text-5xl m-3">{header}</h2>
         <hr />
         <div className="flex ml-auto mr-auto flex-col justify-end sm:w-3/4 w-full">
-          {properties.map((property: any) => {
+          {properties.map((property: any, i: number) => {
+            ref.current.push();
             const {
               type,
               text,
+              addOn,
               label,
               custom,
               optional,
@@ -80,8 +99,10 @@ function AuthForm({
             } = property;
 
             return (
-              <section className="flex flex-col sm:w-3/4 w-full mr-auto ml-auto">
-                <div className="flex relative ">
+              <section
+                ref={(element) => (ref.current[i] = element)}
+                className="flex flex-col sm:w-3/4 w-full mr-auto ml-auto">
+                <div className="flex relative">
                   <label className="self-center" htmlFor={text}>
                     {label}
                   </label>
@@ -100,11 +121,16 @@ function AuthForm({
                     )
                   )}
                 </div>
-                {!optional ? (
+                {!optional || addOn ? (
                   <>
-                    <small className="text-center text-red-600 sm:text-lg text-sm">
-                      {error[text]}
-                    </small>
+                    {error[text]?.customHtml ? (
+                      error[text].message
+                    ) : (
+                      <small className="text-center text-red-600 sm:text-lg text-sm">
+                        {error[text]}
+                      </small>
+                    )}
+
                     {bottomInfo ? bottomInfo : null}
                   </>
                 ) : null}

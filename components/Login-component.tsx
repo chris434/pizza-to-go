@@ -1,5 +1,6 @@
 import AuthForm from "../components/auth-form";
 import QuestionLink from "../components/Question-link";
+import Password from "../components/Password";
 import { FaLock, FaEnvelope } from "react-icons/fa";
 import useToggle from "../components/hooks/useToggle";
 
@@ -11,24 +12,8 @@ function Login({ header, submitPath, component }: any) {
         { type: "text", text: "email", label: <FaEnvelope /> },
 
         {
-          custom: (e: any, className: string) => {
-            return (
-              <>
-                <input
-                  className={className}
-                  onChange={e}
-                  id="password"
-                  type={inputType ? "text" : "password"}
-                  placeholder="Password"
-                />
-                <button
-                  type="button"
-                  onClick={() => setInputType()}
-                  className="absolute top-6 right-6 bg-white sm:text-2xl  text-sm pl-2 pr-2 text-sky-600">
-                  {inputType ? "hide" : "show"}
-                </button>
-              </>
-            );
+          custom: (e: any) => {
+            return <Password event={e} />;
           },
 
           label: <FaLock />,
@@ -44,7 +29,7 @@ function Login({ header, submitPath, component }: any) {
       ]}
       header={header}
       submitText="login"
-      errors={{ email: "", password: "" }}
+      errors={{}}
       bottomComponent={component}
       submitHandler={() => {}}
     />
